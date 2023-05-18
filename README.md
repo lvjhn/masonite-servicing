@@ -1,7 +1,7 @@
 # Masonite-Servicing
 
 ## Introduction
-A simple and small utility library that aids in constructing service feature in Masonite 4.
+A simple and small utility library that aids in constructing services feature in Masonite 4.
 
 ## Features
 [Documentation coming soon]

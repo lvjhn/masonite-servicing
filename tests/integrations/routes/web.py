@@ -1,7 +1,14 @@
 from masonite.routes import Route
 
 ROUTES = [
-    Route.get("/add", "WelcomeController@add"),
-    Route.get("/subtract", "WelcomeController@subtract"),
-    Route.get("/multiply", "WelcomeController@multiply")
+    # CALCULATOR DEMO # 
+    Route.group(
+        [
+            Route.get("/add", "CalculatorController@add"),
+            Route.get("/subtract", "CalculatorController@subtract"),
+            Route.get("/multiply", "CalculatorController@multiply"), 
+            Route.get("/divide", "CalculatorController@divide")
+        ],
+        prefix="/calculator"
+    )
 ]
