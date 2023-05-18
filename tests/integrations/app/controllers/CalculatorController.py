@@ -6,6 +6,7 @@ from masonite.views import View
 from masonite_servicing import * 
 
 from masonite_servicing.services import calculator_service
+from masonite_servicing.validation.IsPositive import IsPositive
 
 class CalculatorController(Controller):
     
@@ -13,7 +14,8 @@ class CalculatorController(Controller):
         return respond(
             request, 
             [
-                validate.required(["a", "b"])
+                validate.required(["a", "b"]), 
+                IsPositive(["a", "b"])
             ], 
             lambda: calculator_service.add(
                 int(request.input("a")),
@@ -26,7 +28,8 @@ class CalculatorController(Controller):
         return respond(
             request, 
             [
-                validate.required(["a", "b"])
+                validate.required(["a", "b"]),
+                IsPositive(["a", "b"])
             ], 
             lambda: calculator_service.subtract(
                 int(request.input("a")),
@@ -39,7 +42,8 @@ class CalculatorController(Controller):
         return respond(
             request, 
             [
-                validate.required(["a", "b"])
+                validate.required(["a", "b"]),
+                IsPositive(["a", "b"])
             ], 
             lambda: calculator_service.multiply(
                 int(request.input("a")),
@@ -51,7 +55,8 @@ class CalculatorController(Controller):
         return respond(
             request, 
             [
-                validate.required(["a", "b"])
+                validate.required(["a", "b"]),
+                IsPositive(["a", "b"])
             ], 
             lambda: calculator_service.divide(
                 int(request.input("a")),

@@ -32,7 +32,7 @@ class ServiceResult:
         """ 
             Generates an id for the service result.
         """ 
-        return uuid.uuid4() 
+        return str(uuid.uuid4())
 
     def get(self):
         """
@@ -85,9 +85,10 @@ def respond(request, validations, callback):
     # as the response 
     if errors: 
         return {
-            "status": "not-ok", 
+            "status": "input-error", 
             "message": "VALIDATION_ERROR", 
-            "value": errors.all() 
+            "value": errors.all(), 
+            "is_validation_error": True
         }
 
     # call and return callback function
@@ -102,66 +103,59 @@ def respond(request, validations, callback):
 
     return result_dict 
 
-        
 class ValidationTester: 
     def __init__(self): 
-        self.should_error   = {} 
-        self.should_pass    = {}
-        self.validator      = {}
-
-    def handle_error_cases(self, errors, should_error): 
-        has_error = False 
-        for field_name in should_error: 
-            validation_items = should_error[field_name]
-            for validation_item in validations_items: 
-                validation_item_dict = {}
-                validation_item[field_name] = validation_item 
-                error = Validator().validate(validation_item_dict)
-                if not error: 
-                    errors.push("Field [" + field_name + "] should error on input [" + validation_item + "]")
-                    has_error = True 
-        return has_error 
-
-    def handle_pass_cases(self, errors, should_pass): 
-        has_error = False 
-        for field_name in should_pass: 
-            validation_items = should_pass[field_name]
-            for validation_item in validations_items: 
-                validation_item_dict = {}
-                validation_item[field_name] = validation_item 
-                error = Validator().validate(validation_item_dict)
-                if error: 
-                    errors.push("Field [" + field_name + "] should pass on input [" + validation_item + "]")
-                    has_error = True 
-        return has_error
-    
-    def report_errors(self, errors, context): 
-        for error in errors:
-            context.dump("Error (" + str(i) + "/" + str(len(errors)) +"): "  + error)
+        self.should_error = [] 
+        self.should_pass = []  
+        self.validation = None 
 
     def run(self, context): 
         should_error = self.should_error
-        should_pass = self.should_pass
+        should_pass = self.should_pass 
 
-        errors = []
+        _errors = []
 
-        # handle error cases 
-        self.handle_error_cases(errors, should_error)
+        # handle should error cases 
+        for value in should_error: 
+            errors = Validator().validate({ "field" : value }, self.validation("field"))
+            if not errors: 
+                _errors.append("Value [" + str(value) + "] should error for validation [" + str(self.validation) + "]")
 
-        # handle pass cases 
-        self.handle_pass_cases(errors, should_pass)
-   
-        # dump errors
-        self.report_errors(errors, context)
+        # handle should pass cases 
+        for value in should_pass: 
+            errors = Validator().validate({ "field" : value }, self.validation("field"))
+            if errors: 
+                _errors.append("Value [" + str(value) + "] should pass for validation [" + str(self.validation) + "]")
 
-        assert(False)
+        for error in _errors:
+            context.dump(error) 
 
-class RouteInputTester: 
-    def __init__(self): 
-        self.should_error   = [] 
-        self.should_pass    = [] 
-        self.route          = "/" 
-        self.method         = "get"
+        if len(_errors) > 0: 
+            assert(False)
+
+class RouteTester: 
+    def __init__(self):
+        self.should_error = [] 
+        self.should_pass = [] 
+        self.route = "/" 
+        self.method = "get"
 
     def run(self, context):
-        pass
+        should_error = self.should_error
+        should_pass = self.should_pass 
+
+        route_caller = getattr(context, self.method) 
+        
+        # handle should error cases
+        for _input in should_error:
+            route_caller(self.route, _input).assertJson({
+                "status": "input-error", 
+                "message": "VALIDATION_ERROR"
+            })
+
+        # handle should pass cases 
+        for _input in should_pass: 
+            route_caller(self.route, _input).assertJsonMissing("is_validation_error")
+
+        
+
