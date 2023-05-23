@@ -7,7 +7,7 @@ class IsPositive(BaseValidation):
         return int(attribute) > 0
 
     def message(self, key):
-        return f"{key} must be true or false"
+        return f"{key} must be positive"
 
     def negated_message(self, key):
-        return "{key} must not be true or false"
+        return "{key} must not be positive"
