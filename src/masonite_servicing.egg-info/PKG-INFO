@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: masonite-servicing
-Version: 0.0.12
+Version: 0.0.14
 Summary: A simple and small utility library that aids in constructing service feature in Masonite 4.
 Home-page: https://github.com/lvjhn/masonite-servicing
 Author: LJ S.A.
@@ -31,7 +31,7 @@ License-File: LICENSE
 # Masonite-Servicing
 
 ## Introduction
-A simple and small utility library that aids in constructing services feature in Masonite 4.
+A simple and small utility library that aids in constructing services features in Masonite 4.
 
 ## Features
 [Documentation coming soon]

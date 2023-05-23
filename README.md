@@ -7,7 +7,7 @@ A simple and small utility library that aids in constructing services features i
 [Documentation coming soon]
 
 ## Usage
-[Documenttion coming soon]
+[Documentation coming soon]
 
 ## Maintainers
 - [LJ S.A.](https://www.github.com/lvjhn)
