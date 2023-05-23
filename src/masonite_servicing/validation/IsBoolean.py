@@ -7,7 +7,7 @@ class IsBoolean(BaseValidation):
         return attribute in ["true", "false"]
 
     def message(self, key):
-        return f"{key} must be true or false"
+        return "Must be true or false"
 
     def negated_message(self, key):
-        return "{key} must not be true or false"
+        return "Must not be true or false"
